@@ -1,24 +1,31 @@
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import * as auth from 'firebase/auth';
+import { UserService } from './user.service';
+import { AppUser } from './models/app-user';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService { 
-  user$: Observable<auth.User|any> ;
-  constructor(private afAuth: AngularFireAuth) {
-    this.user$ = afAuth.user||null;
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Injectable } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
+import * as firebase from 'firebase/auth';
+
+@Injectable()
+export class AuthService {
+
+  user$: Observable<firebase.User>;
+  constructor(
+    private afAuth: AngularFireAuth,
+    private route: ActivatedRoute,
+    private userService: UserService) {
+    this.user$ = afAuth.authState;
   }
-  async login() {
-    try {
-      const result = await this.afAuth.signInWithRedirect(new auth.GoogleAuthProvider());
-      console.log(result);
-    } catch (error) {
-      // window.alert(error.message);
-    }
+  login() {
+    let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    localStorage.setItem('returnUrl', returnUrl);
+    this.afAuth.signInWithRedirect(new firebase.GoogleAuthProvider());
   }
   logout() {
     this.afAuth.signOut();
   }
+  get appUser$(): Observable<AppUser> {
+    return this.user$.pipe(switchMap(user => this.userService.get(user.uid).valueChanges()));    
+  };
 }
