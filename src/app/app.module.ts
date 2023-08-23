@@ -3,7 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { Ng2TableModule } from 'ng2-table/ng2-table';
+//import { CustomValidators } from 'ng2-validation';
 import { FormsModule } from '@angular/forms';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,7 +29,7 @@ import { UserService } from './user.service';
 import { ProductFormComponent } from './admin/product-form/product-form.component';
 import { CategoryService } from './category.service';
 import { ProductService } from './product.service';
-import { CustomFormsModule } from 'ng2-validation';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,14 +46,16 @@ import { CustomFormsModule } from 'ng2-validation';
     ProductFormComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,   
+    FormsModule,   
+    Ng2TableModule,
+    //CustomValidators,   
+    //DataTableModule,  
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
-    NgbModule,
-    FormsModule,
-    CustomFormsModule
+    NgbModule    
   ],
   providers: [
     AuthService,
@@ -58,7 +63,8 @@ import { CustomFormsModule } from 'ng2-validation';
     AdminAuthGuard,
     UserService,
     CategoryService,
-    ProductService
+    ProductService,
+    
   ],
   bootstrap: [AppComponent]
 })

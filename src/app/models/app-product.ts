@@ -1,8 +1,9 @@
-import { DecimalPipe } from "@angular/common";
+ 
 
-export interface AppProduct {
-    category: string;
-    imageUrl: string;
-    price: DecimalPipe;
-    title:string;
+export class  AppProduct {
+    public category: string;
+    public  imageUrl: string;
+    public  price: number;
+    public  title: string;
+    public uid: any;
 }
