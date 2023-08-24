@@ -1,45 +1,38 @@
 <p><a routerLink="/admin/product/new" class="btn btn-primary">New Product</a></p>
-<ng-table [rows]="products" [columns]="columns"></ng-table>
-<pagination *ngIf="config.paging"
-            class="pagination-sm"
-            [(ngModel)]="page"
-           >
-</pagination>
-<!-- <p>
-    <input #query (keyup)="filter(query.value)" type="text" placeholder="Search..." class="form-control">
-</p> -->
-<!-- <data-table [items]="items" [itemCount]="itemCount" (reload)="reloadItems($event)">
-    <data-table-column [property]="'title'" [header]="'Title'" [sortable]="true" [resizable]="true">
-        <ng-template #dataTableCell let-item="product">
-            {{item.title}}
-        </ng-template>
-    </data-table-column>
-    <data-table-column [property]="'price'" [header]="'Price'" [sortable]="true" [resizable]="true">
-        <ng-template #dataTableCell let-item="product">
-            {{item.price | currency:'USD':true}}
-        </ng-template>
-    </data-table-column>
-    <data-table-column [property]="'$key'">
-        <ng-template #dataTableCell let-item="product">
-            <a [routerLink]="['/admin/products/'+item.key]">Edit</a>
-        </ng-template>
-    </data-table-column>
-</data-table> -->
-<!-- <table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let p of products$">
-            <td>{{p.data.title}}</td>
-            <td>{{p.data.price}}</td>
-            <td>
-                <a [routerLink]="['/admin/products/'+p.key]">Edit</a>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Title</th>
+			<th scope="col">Price</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let prdouct of products">
+			<th scope="row">{{ prdouct.id }}</th>
+			<td>
+				{{ prdouct.title }}
+			</td>
+			<td>{{ prdouct.price | number}}</td>
+			<td>
+                <a [routerLink]="['/admin/products/'+prdouct.uid]">Edit</a>
             </td>
-        </tr>
-    </tbody>
-</table>  -->
+		</tr>
+	</tbody>
+</table>
+
+<div class="d-flex justify-content-between p-2">
+	<ngb-pagination
+		[collectionSize]="length"
+		[(page)]="page"
+		[pageSize]="pageSize"
+		(pageChange)="refreshProducts()"
+	>
+	</ngb-pagination>
+
+	<select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshProducts()">
+		<option [ngValue]="2">2 items per page</option>
+		<option [ngValue]="4">4 items per page</option>
+		<option [ngValue]="6">6 items per page</option>
+	</select>
+</div>

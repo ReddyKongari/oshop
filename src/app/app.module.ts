@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { Ng2TableModule } from 'ng2-table/ng2-table';
+import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 //import { CustomValidators } from 'ng2-validation';
 import { FormsModule } from '@angular/forms';
 
@@ -29,7 +29,6 @@ import { UserService } from './user.service';
 import { ProductFormComponent } from './admin/product-form/product-form.component';
 import { CategoryService } from './category.service';
 import { ProductService } from './product.service';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,21 +39,20 @@ import { ProductService } from './product.service';
     CheckOutComponent,
     OrderSuccessComponent,
     MyOrdersComponent,
-    AdminProductsComponent,
+    //AdminProductsComponent,
     AdminOrdersComponent,
     LoginComponent,
     ProductFormComponent
   ],
   imports: [
     BrowserModule,   
+    NgbPaginationModule,
+    NgbAlertModule,
     FormsModule,   
-    Ng2TableModule,
-    //CustomValidators,   
-    //DataTableModule,  
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFireDatabaseModule,
+    AngularFireDatabaseModule,    
     NgbModule    
   ],
   providers: [
