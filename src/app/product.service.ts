@@ -13,12 +13,12 @@ export class ProductService {
   create(product: any) {
     return this.db.list('/products').push(product);
   }
-  getAll(): Observable<AppProduct[]> {
-    this.i = 0;
+   getAll(): Observable<AppProduct[]> {
+    this.i = 0;    
     return this.db.list('/products').snapshotChanges().pipe(map(actions => {
       return actions.map((a: any) => {
         const key = a.payload.key;
-        const data = Object.assign(new AppProduct, { id: ++this.i, uid: key, title: a.payload.val().title, price: a.payload.val().price });
+        const data = Object.assign(new AppProduct, { id: ++this.i, uid: key, title: a.payload.val().title, price: a.payload.val().price,imageUrl:a.payload.val().imageUrl,category:a.payload.val().category });
         return data
       })
     }))
