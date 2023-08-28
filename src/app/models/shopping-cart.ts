@@ -6,10 +6,10 @@ export class ShoppingCart {
         this.itemsMap = itemsMap || {};
         for (let productId in itemsMap) {
             let item = itemsMap[productId];
-            let x = new ShoppingCartItem();
-            Object.assign(x, item);
-            x.uid = productId;
-            this.items.push(x);
+            this.items.push(new ShoppingCartItem({
+                ...item,
+                uid: productId
+            }));            
         }
     }
     getQuantity(product: AppProduct) {
@@ -28,6 +28,5 @@ export class ShoppingCart {
             count += this.items[productId].quantity;
         return count;
     }
-
 }
 

@@ -8,18 +8,26 @@ import { ShoppingCart } from './models/shopping-cart';
   providedIn: 'root'
 })
 export class ShoppingCartService {
-
   constructor(private db: AngularFireDatabase) { }
+  clearCart() {
+    let cartId = localStorage.getItem('cartId');
+    this.db.object('/shopping-carts/' + cartId + '/items').remove();
+  }
+  async getCart(): Promise<Observable<ShoppingCart>> {
+    let cartId = await this.getOrCreateCartId();
+    return this.db.object('/shopping-carts/' + cartId).valueChanges().pipe(map((x: any) => Object.assign(new ShoppingCart(x.items))));
+  }
+  addToCart(product: AppProduct) {
+    this.updateItem(product, 1);
+  }
+  removeFromCart(product: AppProduct) {
+    this.updateItem(product, -1);
+  }
 
   private create() {
     return this.db.list('/shopping-carts').push({
       dateCreated: new Date().getTime()
     })
-  }
-  async getCart(): Promise<Observable<ShoppingCart>> {
-    let cartId = await this.getOrCreateCartId();
-    
-    return this.db.object('/shopping-carts/' + cartId).valueChanges().pipe(map((x: any) =>Object.assign(new ShoppingCart(x.items))));    
   }
   private getItem(cartId: string, productId: any) {
     return this.db.object('/shopping-carts/' + cartId + '/items/' + productId);
@@ -31,23 +39,18 @@ export class ShoppingCartService {
     localStorage.setItem('cartId', result.key);
     return result.key;
   }
-  addToCart(product: AppProduct) {
-    this.updateItem(product, 1);
-  }
-  removeFromCart(product: AppProduct) {
-    this.updateItem(product, -1);
-  }
-  private async updateItem (product: AppProduct, change: number) {
+  private async updateItem(product: AppProduct, change: number) {
     let cartId = await this.getOrCreateCartId();
     let item = this.getItem(cartId, product.uid);
     item.snapshotChanges().pipe(take(1)).subscribe(it => {
       let data: any = it.payload?.val();
-      item.update({ 
+      item.update({
         //product: product, 
-        title:product.title,
-        imageUrl:product.imageUrl,
-        price:product.price,
-        quantity: (data?.quantity || 0) + change });
+        title: product.title,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        quantity: (data?.quantity || 0) + change
+      });
     })
   }
 }
